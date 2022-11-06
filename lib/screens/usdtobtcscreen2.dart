@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bitcoin_calculator/main.dart';
 import 'package:bitcoin_calculator/utils/calculations.dart';
 import 'usdtobtcscreen1.dart';
+import 'package:bitcoin_calculator/config/globals.dart';
 
 class USDtoBTCScreentwo extends StatefulWidget {
   final double BTC;
@@ -12,7 +13,13 @@ class USDtoBTCScreentwo extends StatefulWidget {
 }
 
 class _USDtoBTCScreentwoState extends State<USDtoBTCScreentwo> {
+  Future<double> BTCvalue;
   @override
+  void initState() {
+    super.initState();
+    BTCvalue = CalculationAPI.fetchValue(httpClient);
+  }
+
   Widget build(BuildContext context) {
     bool invalidinput = widget.enteredValidUSD;
     double convertedBitcoin = widget.BTC;
@@ -34,8 +41,17 @@ class _USDtoBTCScreentwoState extends State<USDtoBTCScreentwo> {
                 border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.all(Radius.circular(0))),
             margin: EdgeInsets.only(left: 30, right: 30, bottom: 1),
-            child:
-                Text(convertedBitcoin.toStringAsFixed(6), key: Key('btc-text')),
+            child: FutureBuilder<double>(
+                future: BTCvalue,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    String convertedBTC = convertedBitcoin.toStringAsFixed(6);
+                    return Text(convertedBTC, key: Key("btc-text"));
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return CircularProgressIndicator();
+                }) /*Text(convertedBitcoin.toStringAsFixed(6), key: Key('btc-text'))*/,
             alignment: Alignment.center,
           ),
           Padding(
