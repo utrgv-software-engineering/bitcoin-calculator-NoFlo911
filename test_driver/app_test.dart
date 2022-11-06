@@ -1,6 +1,9 @@
 // Imports the Flutter Driver API.
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
+import 'package:bitcoin_calculator/utils/calculations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:bitcoin_calculator/config/globals.dart';
 
 void main() {
   // First, define the Finders and use them to locate widgets from the
@@ -65,7 +68,7 @@ void main() {
       expect(
           await driver.getText(HappyText), 'The conversion from USD to BTC:');
 
-      expect(await driver.getText(BTCText), '0.000048');
+      expect(await driver.getText(BTCText), '0.000067');
 
       await driver.tap(homeBtn);
     });
@@ -97,7 +100,7 @@ void main() {
       expect(
           await driver.getText(HappyText), 'The conversion from USD to BTC:');
 
-      expect(await driver.getText(BTCText), '0.000240');
+      expect(await driver.getText(BTCText), '0.000335');
 
       await driver.tap(homeBtn);
     });
@@ -130,7 +133,7 @@ void main() {
       expect(
           await driver.getText(HappyText), 'The conversion from BTC to USD:');
 
-      expect(await driver.getText(BTCText), '20355.80');
+      expect(await driver.getText(BTCText), '14934.58');
 
       await driver.tap(homeBtn);
     });
@@ -163,7 +166,7 @@ void main() {
       expect(
           await driver.getText(HappyText), 'The conversion from BTC to USD:');
 
-      expect(await driver.getText(BTCText), '101779.00');
+      expect(await driver.getText(BTCText), '74672.92');
 
       await driver.tap(homeBtn);
     });

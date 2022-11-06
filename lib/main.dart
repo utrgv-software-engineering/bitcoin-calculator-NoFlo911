@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/btctousdscreen1.dart';
 import 'screens/usdtobtcscreen1.dart';
+import 'package:bitcoin_calculator/utils/calculations.dart';
 
 void main() => runApp(MyApp());
 

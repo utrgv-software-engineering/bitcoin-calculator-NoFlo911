@@ -1,3 +1,5 @@
+import 'package:bitcoin_calculator/config/globals.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:bitcoin_calculator/utils/calculations.dart';
 
@@ -8,50 +10,66 @@ void main() {
   // });
 
   group("usd to btc calculation", () {
-    test('throws ArgumentError on zero', () {
-      expect(() => Calculation.USDtoBTC(0.0), throwsArgumentError);
-    });
-    test('throws ArgumentError on negative number', () {
-      expect(() => Calculation.USDtoBTC(-1.0), throwsArgumentError);
-    });
-
-    test('calculates btc for 1 usd', () {
-      var btc = Calculation.USDtoBTC(1.0);
-      expect(btc, 0.000048);
+    test('throws ArgumentError on zero', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      expect(() => Calculation.USDtoBTC(currentBTCvalue, 0.0),
+          throwsArgumentError);
     });
 
-    test('calculates btc for 5 usd', () {
-      var btc = Calculation.USDtoBTC(5.0);
-      expect(btc, 0.000240);
+    test('throws ArgumentError on negative number', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      expect(() => Calculation.USDtoBTC(currentBTCvalue, -1.0),
+          throwsArgumentError);
     });
 
-    test('calculates btc for 10.67 usd', () {
-      var btc = Calculation.USDtoBTC(10.67);
-      expect(btc, 0.000512);
+    test('calculates btc for 1 usd', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      var btc = Calculation.USDtoBTC(currentBTCvalue, 1.0);
+      expect(btc, double.parse(((1.0) / (currentBTCvalue)).toStringAsFixed(6)));
+    });
+    test('calculates btc for 5 usd', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      var btc = Calculation.USDtoBTC(currentBTCvalue, 5.0);
+      expect(btc, double.parse(((5.0) / (currentBTCvalue)).toStringAsFixed(6)));
+    });
+
+    test('calculates btc for 10.67 usd', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      var btc = Calculation.USDtoBTC(currentBTCvalue, 10.67);
+      expect(
+          btc, double.parse(((10.67) / (currentBTCvalue)).toStringAsFixed(6)));
     });
   });
 
   group("btc to usd calculation", () {
-    test('throws ArgumentError on zero', () {
-      expect(() => Calculation.BTCtoUSD(0.0), throwsArgumentError);
-    });
-    test('throws ArgumentError on negative number', () {
-      expect(() => Calculation.BTCtoUSD(-1.0), throwsArgumentError);
-    });
-
-    test('calculates btc for 1 usd', () {
-      var btc = Calculation.BTCtoUSD(1.0);
-      expect(btc, 20355.80);
+    test('throws ArgumentError on zero', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      expect(() => Calculation.BTCtoUSD(currentBTCvalue, 0.0),
+          throwsArgumentError);
     });
 
-    test('calculates btc for 5 usd', () {
-      var btc = Calculation.BTCtoUSD(5.0);
-      expect(btc, 101779.00);
+    test('throws ArgumentError on negative number', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      expect(() => Calculation.BTCtoUSD(currentBTCvalue, -1.0),
+          throwsArgumentError);
     });
 
-    test('calculates btc for 10.67 usd', () {
-      var btc = Calculation.BTCtoUSD(10.67);
-      expect(btc, 217196.39);
+    test('calculates usd for 1 btc', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      var btc = Calculation.BTCtoUSD(currentBTCvalue, 1.0);
+      expect(btc, double.parse(((1.0) * (currentBTCvalue)).toStringAsFixed(2)));
+    });
+    test('calculates usd for 5 btc', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      var btc = Calculation.BTCtoUSD(currentBTCvalue, 5.0);
+      expect(btc, double.parse(((5.0) * (currentBTCvalue)).toStringAsFixed(2)));
+    });
+
+    test('calculates usd for 10.67 btc', () async {
+      double currentBTCvalue = await CalculationAPI.fetchValue(httpClient);
+      var btc = Calculation.BTCtoUSD(currentBTCvalue, 10.67);
+      expect(
+          btc, double.parse(((10.67) * (currentBTCvalue)).toStringAsFixed(2)));
     });
   });
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bitcoin_calculator/main.dart';
 import 'package:bitcoin_calculator/utils/calculations.dart';
 import 'btctousdscreen2.dart';
+import 'package:bitcoin_calculator/config/globals.dart';
 
 class BTCtoUSDScreenone extends StatefulWidget {
   @override
@@ -11,7 +12,30 @@ class BTCtoUSDScreenone extends StatefulWidget {
 class _BTCtoUSDScreenoneState extends State<BTCtoUSDScreenone> {
   bool invalidinput = false;
   double USD = 0.00;
+  Future<double> BTCvalue;
+
   @override
+  void initState() {
+    super.initState();
+    BTCvalue = CalculationAPI.fetchValue(httpClient);
+  }
+
+  _setcurrentBTCValue(String text) async {
+    double currentBTC = await BTCvalue;
+
+    setState(() {
+      if (double.tryParse(text) == null || double.tryParse(text) <= 0.00) {
+        invalidinput = true;
+        USD = 0.00;
+      } else {
+        invalidinput = false;
+        double actualUSD = double.parse(text);
+        double actualBTC = currentBTC;
+        USD = Calculation.BTCtoUSD(actualBTC, actualUSD);
+      }
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
@@ -26,16 +50,19 @@ class _BTCtoUSDScreenoneState extends State<BTCtoUSDScreenone> {
               key: Key('btc-textfield'),
               keyboardType: TextInputType.number,
               onChanged: (enteredBTC) {
-                setState(() {
+                _setcurrentBTCValue(enteredBTC);
+                /* setState(() async {
                   if (double.tryParse(enteredBTC) == null ||
                       double.tryParse(enteredBTC) <= 0.00) {
                     invalidinput = true;
                     USD = 0.00;
                   } else {
                     invalidinput = false;
-                    USD = Calculation.BTCtoUSD(double.tryParse(enteredBTC));
+                    double actualUSD = double.parse(enteredBTC);
+                    double currentBTC = await BTCvalue;
+                    USD = Calculation.BTCtoUSD(currentBTC, actualUSD);
                   }
-                });
+                });*/
               })),
       Container(
           width: 200,
